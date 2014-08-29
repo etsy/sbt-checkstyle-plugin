@@ -33,8 +33,12 @@ the `test:checkstyle` task.
 
 The Checkstyle configuration file is `./checkstyle-config.xml` by
 default.  This can be changed by setting the value of
-`checkstyleConfig`.
+`checkstyleConfig`.  By default `test:checkstyle` uses the same
+configuration file, but this can be changed by setting the value of
+`checkstyleConfig in Test`.
 
 The Checkstyle report is output to `target/checkstyle-report.xml` by
 default.  This can be changed by setting the value of
-`checkstyleTarget`.
+`checkstyleTarget`.  `test:checkstyle` outputs to
+`target/checkstyle-test-report.xml`, but this can be changed by
+setting the value of `checkstyleTarget in Test`.
