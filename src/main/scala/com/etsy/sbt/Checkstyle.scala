@@ -48,7 +48,7 @@ object Checkstyle extends Plugin {
     * 
     * @param block The block of code to wrap and execute
     */
-  def noExit(block: => Any): Any = {
+  def noExit(block: => Unit): Unit = {
     val original = System.getSecurityManager
     System.setSecurityManager(new NoExitSecurityManager())
 
