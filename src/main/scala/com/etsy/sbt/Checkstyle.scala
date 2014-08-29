@@ -62,7 +62,7 @@ object Checkstyle extends Plugin {
     }
   }
 
-  val checkstyleSettings = Seq(
+  val checkstyleSettings: Seq[Def.Setting[_]] = Seq(
     checkstyleTarget <<= target(_ / "checkstyle-report.xml"),
     checkstyleConfig := file("checkstyle-config.xml"),
     checkstyle in Compile <<= checkstyleTask(Compile),
