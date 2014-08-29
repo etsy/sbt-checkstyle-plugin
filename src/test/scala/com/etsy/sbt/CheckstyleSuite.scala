@@ -15,7 +15,7 @@ class CheckstyleSuite extends JUnitSuite {
   @Test
   def testTrapExits() = {
     val originalSecManager = System.getSecurityManager
-    trapExits {
+    noExit {
       sys.exit(1)
     }
     assertEquals("Security manager changed after execution", originalSecManager, System.getSecurityManager)

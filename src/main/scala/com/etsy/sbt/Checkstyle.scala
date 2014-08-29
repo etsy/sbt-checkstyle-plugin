@@ -36,7 +36,7 @@ object Checkstyle extends Plugin {
     // Checkstyle calls System.exit which would exit SBT
     // Thus we wrap the call to it with a special security policy
     // that forbids exiting the JVM
-    trapExits {
+    noExit {
       CheckstyleMain(checkstyleArgs)
     }
   }
@@ -48,7 +48,7 @@ object Checkstyle extends Plugin {
     * 
     * @param block The block of code to wrap and execute
     */
-  def trapExits(block: => Unit): Unit = {
+  def noExit(block: => Any): Any = {
     val original = System.getSecurityManager
     System.setSecurityManager(new NoExitSecurityManager())
 
