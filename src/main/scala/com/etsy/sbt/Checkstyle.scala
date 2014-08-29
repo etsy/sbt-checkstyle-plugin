@@ -16,9 +16,9 @@ object Checkstyle extends Plugin {
   import CheckstyleTasks._
 
   object CheckstyleTasks {
-    val checkstyle = TaskKey[Unit]("checkstyle")
-    val checkstyleTarget = SettingKey[File]("checkstyle-target")
-    val checkstyleConfig = SettingKey[File]("checkstyle-config")
+    val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
+    val checkstyleTarget = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
+    val checkstyleConfig = SettingKey[File]("checkstyle-config", "The location of the checkstyle configuration file")
   }
 
   /**
