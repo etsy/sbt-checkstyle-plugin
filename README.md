@@ -6,6 +6,9 @@ Java source files.  For more information about Checkstyle, see
 
 This plugin uses version 5.5 of Checkstyle.
 
+This is a fork of the sbt-code-quality project found
+[here](https://github.com/corux/sbt-code-quality).
+
 ## Setup
 
 Add the following lines to `project/plugins.sbt`
