@@ -21,18 +21,23 @@ object Checkstyle extends Plugin {
     val checkstyleConfig = SettingKey[File]("checkstyle-config")
   }
 
-  def checkstyleTask(conf: Configuration) = Def.task {
-    val args = List(
-      "-c", checkstyleConfig.value.getAbsolutePath,
-      "-f", "xml",
-      "-r", (javaSource in conf).value.getAbsolutePath,
-      "-o", checkstyleTarget.value.getAbsolutePath
+  /**
+    * Runs checkstyle
+    * 
+    * @param conf The configuration (Compile or Test) in which context to execute the checkstyle command
+    */
+  def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
+    val checkstyleArgs = Array(
+      "-c", checkstyleConfig.value.getAbsolutePath, // checkstyle configuration fle
+      "-r", (javaSource in conf).value.getAbsolutePath, // location of Java source files
+      "-f", "xml", // output format
+      "-o", checkstyleTarget.value.getAbsolutePath // output file
     )
     // Checkstyle calls System.exit which would exit SBT
     // Thus we wrap the call to it with a special security policy
     // that forbids exiting the JVM
     trapExits {
-      CheckstyleMain(args.toArray)
+      CheckstyleMain(checkstyleArgs)
     }
   }
 
@@ -45,7 +50,7 @@ object Checkstyle extends Plugin {
     */
   def trapExits(block: => Unit): Unit = {
     val original = System.getSecurityManager
-    System setSecurityManager new NoExitSecurityManager()
+    System.setSecurityManager(new NoExitSecurityManager())
 
     try {
       block
@@ -53,7 +58,7 @@ object Checkstyle extends Plugin {
       case _: NoExitException =>
       case e : Throwable => throw e
     } finally {
-      System setSecurityManager original
+      System.setSecurityManager(original)
     }
   }
 

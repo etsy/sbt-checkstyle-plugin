@@ -9,8 +9,13 @@ import java.security.Permission
   * @author Andrew Johnson
   */
 class NoExitSecurityManager extends SecurityManager {
+  /**
+    * Throws a NoExitException if access is requested to the exitVM permission
+    *
+    * @param perm The requested permission
+    */
   override def checkPermission(perm: Permission) {
-    if (perm.getName startsWith "exitVM") throw NoExitException()
+    if (perm.getName.startsWith("exitVM")) throw NoExitException()
   }
 }
 
