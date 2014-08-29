@@ -28,10 +28,10 @@ object Checkstyle extends Plugin {
     */
   def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
     val checkstyleArgs = Array(
-      "-c", checkstyleConfig.value.getAbsolutePath, // checkstyle configuration fle
+      "-c", (checkstyleConfig in conf).value.getAbsolutePath, // checkstyle configuration fle
       "-r", (javaSource in conf).value.getAbsolutePath, // location of Java source files
       "-f", "xml", // output format
-      "-o", checkstyleTarget.value.getAbsolutePath // output file
+      "-o", (checkstyleTarget in conf).value.getAbsolutePath // output file
     )
     // Checkstyle calls System.exit which would exit SBT
     // Thus we wrap the call to it with a special security policy
@@ -64,7 +64,9 @@ object Checkstyle extends Plugin {
 
   val checkstyleSettings: Seq[Def.Setting[_]] = Seq(
     checkstyleTarget <<= target(_ / "checkstyle-report.xml"),
+    checkstyleTarget in Test <<= target(_ / "checkstyle-test-report.xml"),
     checkstyleConfig := file("checkstyle-config.xml"),
+    checkstyleConfig in Test <<= checkstyleConfig,
     checkstyle in Compile <<= checkstyleTask(Compile),
     checkstyle in Test <<= checkstyleTask(Test)
   )
