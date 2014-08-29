@@ -13,7 +13,7 @@ class CheckstyleSuite extends JUnitSuite {
   def exitRule = ExpectedSystemExit.none()
 
   @Test
-  def testTrapExits() = {
+  def testNoExit() = {
     val originalSecManager = System.getSecurityManager
     noExit {
       sys.exit(1)
