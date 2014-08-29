@@ -11,7 +11,7 @@ This plugin uses version 5.5 of Checkstyle.
 Add the following lines to `project/plugins.sbt`
 
 ```scala
-addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.2-SNAPSHOT")
+addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.3-SNAPSHOT")
 
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"	
 ```
