@@ -4,7 +4,7 @@ name := "sbt-checkstyle-plugin"
 
 organization := "com.etsy"
 
-version := "0.3-SNAPSHOT"
+version := "0.3.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
   "com.puppycrawl.tools" % "checkstyle" % "5.5",
