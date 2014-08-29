@@ -4,10 +4,13 @@ name := "sbt-checkstyle-plugin"
 
 organization := "com.etsy"
 
-version := "0.1"
+version := "0.2-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  "com.puppycrawl.tools" % "checkstyle" % "5.5"
+  "com.puppycrawl.tools" % "checkstyle" % "5.5",
+  "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+  "junit" % "junit" % "4.11" % "test",
+  "com.github.stefanbirkner" % "system-rules" % "1.6.0" % "test"
 )
 
 publishTo <<= version { (v: String) =>
