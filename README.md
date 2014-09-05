@@ -19,7 +19,7 @@ addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.3-SNAPSHOT")
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"	
 ```
 
-The add the following line to `build.sbt`:
+Then add the following line to `build.sbt`:
 
 ```scala
 com.etsy.sbt.Checkstyle.checkstyleSettings
