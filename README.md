@@ -14,7 +14,7 @@ This is a fork of the sbt-code-quality project found
 Add the following lines to `project/plugins.sbt`
 
 ```scala
-addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.3-SNAPSHOT")
+addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.4.0")
 
 resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"	
 ```
