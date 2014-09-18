@@ -1,11 +1,9 @@
 package com.etsy.sbt
 
-import sbt._
+import com.puppycrawl.tools.checkstyle.Main.{main => CheckstyleMain}
+import sbt.Def.Initialize
 import sbt.Keys._
-import sbt.std.TaskStreams
-import Def.{Initialize}
-import com.puppycrawl.tools.checkstyle.Main.{ main => CheckstyleMain }
-import com.etsy.sbt._
+import sbt._
 
 /**
   * An SBT plugin to run checkstyle over Java code
@@ -13,7 +11,7 @@ import com.etsy.sbt._
   * @author Andrew Johnson <ajohnson@etsy.com>
   */
 object Checkstyle extends Plugin {
-  import CheckstyleTasks._
+  import com.etsy.sbt.Checkstyle.CheckstyleTasks._
 
   object CheckstyleTasks {
     val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
