@@ -43,5 +43,5 @@ setting the value of `checkstyleTarget in Test`.
 
 You can set `checkstyleConfig` like so in `build.sbt`:
 ```scala
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleConfig := file("checkstyle-config2.xml")
+com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleConfig := file("checkstyle-config.xml")
 ```
