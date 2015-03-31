@@ -1,4 +1,4 @@
-# sbt-checkstyle-plugin
+# sbt-checkstyle-plugin [![Build Status](https://travis-ci.org/etsy/sbt-checkstyle-plugin.svg?branch=master)](https://travis-ci.org/etsy/sbt-checkstyle-plugin)
 
 This project provides an SBT 0.13+ plugin for running Checkstyle over
 Java source files.  For more information about Checkstyle, see
