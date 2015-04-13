@@ -26,8 +26,8 @@ object Checkstyle extends Plugin {
     */
   def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
     val checkstyleArgs = Array(
-      "-c", (checkstyleConfig in conf).value.getAbsolutePath, // checkstyle configuration fle
-      "-r", (javaSource in conf).value.getAbsolutePath, // location of Java source files
+      "-c", (checkstyleConfig in conf).value.getAbsolutePath, // checkstyle configuration file
+      (javaSource in conf).value.getAbsolutePath, // location of Java source file
       "-f", "xml", // output format
       "-o", (checkstyleTarget in conf).value.getAbsolutePath // output file
     )
