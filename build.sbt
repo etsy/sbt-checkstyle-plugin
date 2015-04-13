@@ -9,7 +9,7 @@ organization := "com.etsy"
 version := "0.4.2-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  "com.puppycrawl.tools" % "checkstyle" % "6.1",
+  "com.puppycrawl.tools" % "checkstyle" % "6.5",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "junit" % "junit" % "4.11" % "test",
   "com.github.stefanbirkner" % "system-rules" % "1.6.0" % "test"
