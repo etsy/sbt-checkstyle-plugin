@@ -66,6 +66,8 @@ object Checkstyle extends Plugin {
       transformer.setInitialContextNode(source)
       transformer.setDestination(output)
       transformer.transform()
+      transformer.close()
+      output.close()
     }
   }
 

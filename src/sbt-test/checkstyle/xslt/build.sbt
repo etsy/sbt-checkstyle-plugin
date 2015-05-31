@@ -9,4 +9,6 @@ name := "checkstyle-test"
 
 organization := "com.etsy"
 
-xsltTransformations := Some(Set(XSLTSettings(file("./checkstyle-noframes.xml"), file("./target/checkstyle-report.html"))))
+xsltTransformations := {
+  Some(Set(XSLTSettings(baseDirectory(_ / "checkstyle-noframes.xml").value, target(_ / "checkstyle-report.html").value)))
+}
