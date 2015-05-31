@@ -42,6 +42,7 @@ object Checkstyle extends Plugin {
     noExit {
       CheckstyleMain(checkstyleArgs)
     }
+
     xsltTransformations.value match {
       case None => // Nothing to do
       case Some(xslt) => applyXSLT(file(outputFile), xslt)
