@@ -8,8 +8,6 @@ import sbt.Def.Initialize
 import sbt.Keys._
 import sbt._
 
-import scala.io.Source
-
 /**
   * An SBT plugin to run checkstyle over Java code
   *  
@@ -52,6 +50,7 @@ object Checkstyle extends Plugin {
 
   /**
    * Applies a set of XSLT transformation to the XML file produced by checkstyle
+   *
    * @param input The XML file produced by checkstyle
    * @param transformations The XSLT transformations to be applied
    */
