@@ -36,6 +36,11 @@ object Checkstyle extends Plugin {
       "-f", "xml", // output format
       "-o", outputFile // output file
     )
+
+    val outputDir = target.value
+    if (!outputDir.exists()) {
+      outputDir.mkdirs()
+    }
     // Checkstyle calls System.exit which would exit SBT
     // Thus we wrap the call to it with a special security policy
     // that forbids exiting the JVM

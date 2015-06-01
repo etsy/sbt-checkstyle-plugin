@@ -2,4 +2,4 @@ language: scala
 scala:
     - 2.10.4
 script:
-    - sbt ++$TRAVIS_SCALA_VERSION test "scripted checkstyle/checkstyle*"
+    - sbt ++$TRAVIS_SCALA_VERSION test scripted
