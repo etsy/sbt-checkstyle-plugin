@@ -45,7 +45,7 @@ object Checkstyle extends Plugin {
     // Thus we wrap the call to it with a special security policy
     // that forbids exiting the JVM
     noExit {
-      CheckstyleMain(checkstyleArgs)
+      CheckstyleMain(checkstyleArgs:_*)
     }
 
     xsltTransformations.value match {
