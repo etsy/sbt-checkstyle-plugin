@@ -1,12 +1,10 @@
-import SonatypeKeys._
-
 sbtPlugin := true
 
 name := "sbt-checkstyle-plugin"
 
 organization := "com.etsy"
 
-version := "0.5.2-SNAPSHOT"
+version := "0.5.4-SNAPSHOT"
 
 scalaVersion := "2.10.4"
 
@@ -20,8 +18,7 @@ libraryDependencies ++= Seq(
 
 xerial.sbt.Sonatype.sonatypeSettings
 
-pomExtra := (
-  <url>https://github.com/etsy/sbt-checkstyle-plugin</url>
+pomExtra := <url>https://github.com/etsy/sbt-checkstyle-plugin</url>
   <licenses>
     <license>
       <name>MIT License</name>
@@ -40,4 +37,3 @@ pomExtra := (
       <url>github.com/ajsquared</url>
     </developer>
   </developers>
-)
