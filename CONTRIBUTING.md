@@ -15,3 +15,4 @@ Every pull request will be built with [Travis CI](https://travis-ci.org/etsy/sbt
 - Andrew Johnson [ajsquared](https://github.com/ajsquared)
 - Hans L'hoëst [lhohan](https://github.com/lhohan)
 - sentolacco [sentolacco](https://github.com/sentolacco)
+- Joseph Earl [JosephEarl](https://github.com/JosephEarl)
