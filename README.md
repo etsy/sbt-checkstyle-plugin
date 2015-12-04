@@ -57,6 +57,24 @@ xsltTransformations := {
 }
 ```
 
+### Integration tests
+
+If you want to run Checkstyle on your integration tests add the following to your `build.sbt`:
+```scala
+lazy val root = (project in file(".")).configs(IntegrationTest)
+
+Defaults.itSettings
+
+import com.etsy.sbt._
+com.etsy.sbt.Checkstyle.checkstyleSettings ++ Seq(
+  Checkstyle.CheckstyleTasks.checkstyleConfig := file("my-checkstyle-config.xml"),
+  Checkstyle.CheckstyleTasks.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
+  Checkstyle.CheckstyleTasks.checkstyleTarget in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
+)
+```
+
+You can then run the tasks `it:checkstyle` and `it:checkstyle-check`.
+
 ### Upgrading Checkstyle version
 
 SBT Checkstyle plugin comes with a default Checkstyle version: currently, Checkstyle 6.13 is used by default.
