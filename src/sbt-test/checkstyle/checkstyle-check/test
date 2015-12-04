@@ -1,0 +1,3 @@
+# Check the build fails when running the check task
+-> compile:checkstyle-check
+$ exists target/checkstyle-report.xml
