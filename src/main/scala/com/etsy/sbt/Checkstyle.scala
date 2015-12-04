@@ -60,8 +60,8 @@ object Checkstyle extends Plugin {
       val report = scala.xml.XML.loadFile(file(outputFile))
       val checkstyleSeverityLevels = Seq("ignore", "info", "warning", "error")
       val appliedCheckstyleSeverityLevels = checkstyleSeverityLevels.indexOf(checkstyleCheckSeverityLevel.value) match {
-        case i if i > 0 => checkstyleSeverityLevels.drop(i - 1)
-        case i => checkstyleSeverityLevels
+        case i if i == -1 => Seq("error") // unknown level supplied, default to just error
+        case i => checkstyleSeverityLevels.drop(i)
       }
       var issuesFound = 0
       (report \ "file").foreach { file =>
