@@ -63,10 +63,10 @@ To fail the build when Checkstyle issues are found use the `checkstyle-check` ta
 
 You can control what severity of issues should break the build by setting the `checkstyleCheckSeverityLevel` in your `build.sbt` as follows:
 ```scala
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleCheckSeverityLevel := Set("ignore", "info", "warning", "error")
+com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleCheckSeverityLevel := "info"
 ```
 
-The default is `Set("error")`.
+Possible values are `"ignore"`, `"info"`, `"warning"` and `"error"`. The default is `"error"`.
 
 ### Integration tests
 

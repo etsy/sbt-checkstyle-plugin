@@ -25,7 +25,7 @@ object Checkstyle extends Plugin {
     val checkstyleTarget = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
     val checkstyleConfig = SettingKey[File]("checkstyle-config", "The location of the checkstyle configuration file")
     val xsltTransformations = SettingKey[Option[Set[XSLTSettings]]]("xslt-transformations", "An optional set of XSLT transformations to be applied to the checkstyle output")
-    val checkstyleCheckSeverityLevel = SettingKey[Set[String]]("checkstyle-check-level", "Sets the severity levels which should fail the build")
+    val checkstyleCheckSeverityLevel = SettingKey[String]("checkstyle-check-level", "Sets the severity levels which should fail the build")
   }
 
   /**
@@ -58,11 +58,16 @@ object Checkstyle extends Plugin {
     if (file(outputFile).exists) {
       val log = streams.value.log
       val report = scala.xml.XML.loadFile(file(outputFile))
+      val checkstyleSeverityLevels = Seq("ignore", "info", "warning", "error")
+      val appliedCheckstyleSeverityLevels = checkstyleSeverityLevels.indexOf(checkstyleCheckSeverityLevel.value) match {
+        case i if i > 0 => checkstyleSeverityLevels.drop(i - 1)
+        case i => checkstyleSeverityLevels
+      }
       var issuesFound = 0
       (report \ "file").foreach { file =>
         (file \ "error").foreach { error =>
           val severity: String = error.attribute("severity").get.head.text
-          if (checkstyleCheckSeverityLevel.value.contains(severity)) {
+          if (appliedCheckstyleSeverityLevels.contains(severity)) {
             val lineNumber: String = error.attribute("line").get.head.text
             val filename: String = file.attribute("name").get.head.text
             val errorMessage: String = error.attribute("message").get.head.text
@@ -155,7 +160,7 @@ object Checkstyle extends Plugin {
     checkstyle in Compile <<= checkstyleTask(Compile),
     checkstyle in Test <<= checkstyleTask(Test),
     xsltTransformations := None,
-    checkstyleCheckSeverityLevel := Set("error"),
+    checkstyleCheckSeverityLevel := "error",
     checkstyleCheck in Compile <<= checkstyleCheckTask(Compile),
     checkstyleCheck in Test <<= checkstyleCheckTask(Test)
   )
