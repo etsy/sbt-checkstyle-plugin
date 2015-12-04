@@ -1,0 +1,3 @@
+# Check the build passes when running the check task on an empty project
+> compile:checkstyle-check
+-$ exists target/checkstyle-report.xml

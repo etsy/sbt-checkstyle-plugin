@@ -55,25 +55,27 @@ object Checkstyle extends Plugin {
 
     checkstyleMain(configFile, outputFile, source, xsltTransformations.value)
 
-    val log = streams.value.log
-    val report = scala.xml.XML.loadFile(file(outputFile))
-    var issuesFound = 0
-    (report \ "file").foreach { file =>
-      (file \ "error").foreach { error =>
-        val severity: String = error.attribute("severity").get.head.text
-        if (checkstyleCheckSeverityLevel.value.contains(severity)) {
-          val lineNumber: String = error.attribute("line").get.head.text
-          val filename: String = file.attribute("name").get.head.text
-          val errorMessage: String = error.attribute("message").get.head.text
-          log.error("Checkstyle " + severity + " found in " + filename + ":" + lineNumber + ": " + errorMessage)
-          issuesFound += 1
+    if (file(outputFile).exists) {
+      val log = streams.value.log
+      val report = scala.xml.XML.loadFile(file(outputFile))
+      var issuesFound = 0
+      (report \ "file").foreach { file =>
+        (file \ "error").foreach { error =>
+          val severity: String = error.attribute("severity").get.head.text
+          if (checkstyleCheckSeverityLevel.value.contains(severity)) {
+            val lineNumber: String = error.attribute("line").get.head.text
+            val filename: String = file.attribute("name").get.head.text
+            val errorMessage: String = error.attribute("message").get.head.text
+            log.error("Checkstyle " + severity + " found in " + filename + ":" + lineNumber + ": " + errorMessage)
+            issuesFound += 1
+          }
         }
       }
-    }
 
-    if (issuesFound > 0) {
-      log.error(issuesFound + " issue(s) found in Checkstyle report: " + outputFile + "")
-      sys.exit(1)
+      if (issuesFound > 0) {
+        log.error(issuesFound + " issue(s) found in Checkstyle report: " + outputFile + "")
+        sys.exit(1)
+      }
     }
   }
 
