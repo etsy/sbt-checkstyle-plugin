@@ -8,6 +8,8 @@ import sbt.Def.Initialize
 import sbt.Keys._
 import sbt._
 
+import scala.io.Source
+
 /**
   * An SBT plugin to run checkstyle over Java code
   *
@@ -30,7 +32,7 @@ object Checkstyle extends Plugin {
   object CheckstyleTasks {
     val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
     val checkstyleTarget = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
-    val checkstyleConfig = SettingKey[File]("checkstyle-config", "The location of the checkstyle configuration file")
+    val checkstyleConfig = SettingKey[Source]("checkstyle-config", "The location of the checkstyle configuration file")
     val xsltTransformations = SettingKey[Option[Set[XSLTSettings]]]("xslt-transformations", "An optional set of XSLT transformations to be applied to the checkstyle output")
     val checkstyleSeverityLevel = SettingKey[Option[CheckstyleSeverityLevel]]("checkstyle-severity-level", "Sets the severity levels which should fail the build")
   }
@@ -45,13 +47,22 @@ object Checkstyle extends Plugin {
   def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
     val configFile = (checkstyleConfig in conf).value.getAbsolutePath
     val outputFile = (checkstyleTarget in conf).value.getAbsolutePath
-    val source = (javaSource in conf).value.getAbsolutePath
+    val targetFolder = (checkstyleTarget in conf).value.getParentFile
+    val configFile = targetFolder + "/checkstyle-config.xml"
 
-    val targetFolder = file(outputFile).getParentFile.getAbsolutePath
-    java.nio.file.Files.createDirectories(java.nio.file.Paths.get(targetFolder))
+    val outputDir = target.value
+    if (!outputDir.exists()) {
+      outputDir.mkdirs()
+    }
+
+    val config = scala.xml.XML.loadString((checkstyleConfig in conf).value.mkString)
+    scala.xml.XML.save(configFile, config, "UTF-8", true,
+      scala.xml.dtd.DocType("module", scala.xml.dtd.PublicID("-//Puppy Crawl//DTD Check Configuration 1.3//EN",
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd"), Nil))
 
     val checkstyleArgs = Array(
       "-c", configFile, // checkstyle configuration file
+      (javaSource in conf).value.getAbsolutePath, // location of Java source file
       "-f", "xml", // output format
       "-o", outputFile, // output file
       source // location of Java source file
@@ -144,7 +155,7 @@ object Checkstyle extends Plugin {
   val checkstyleSettings: Seq[Def.Setting[_]] = Seq(
     checkstyleTarget <<= target(_ / "checkstyle-report.xml"),
     checkstyleTarget in Test <<= target(_ / "checkstyle-test-report.xml"),
-    checkstyleConfig := file("checkstyle-config.xml"),
+    checkstyleConfig := Source.fromFile("checkstyle-config.xml"),
     checkstyleConfig in Test <<= checkstyleConfig,
     checkstyle in Compile <<= checkstyleTask(Compile),
     checkstyle in Test <<= checkstyleTask(Test),
