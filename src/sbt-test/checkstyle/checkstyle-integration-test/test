@@ -1,0 +1,3 @@
+# Check that the checkstyle report is created
+> it:checkstyle
+$ exists target/checkstyle-integration-test-report.xml
