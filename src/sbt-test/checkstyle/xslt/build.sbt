@@ -1,14 +1,13 @@
-import com.etsy.sbt.Checkstyle.CheckstyleTasks._
-import com.etsy.sbt.XSLTSettings
-
-com.etsy.sbt.Checkstyle.checkstyleSettings
-
 version := "0.1"
 
-name := "checkstyle-test"
+name := "xslt"
 
 organization := "com.etsy"
 
-xsltTransformations := {
+import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.XSLTSettings
+
+Checkstyle.checkstyleSettings
+Checkstyle.CheckstyleTasks.xsltTransformations := {
   Some(Set(XSLTSettings(baseDirectory(_ / "checkstyle-noframes.xml").value, target(_ / "checkstyle-report.html").value)))
 }

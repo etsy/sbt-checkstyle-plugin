@@ -17,10 +17,12 @@ Add the following lines to `project/plugins.sbt`:
 addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.5.3")
 ```
 
-Then add the following line to `build.sbt`:
+Then add the following lines to `build.sbt`:
 
 ```scala
-com.etsy.sbt.Checkstyle.checkstyleSettings
+import com.etsy.sbt.Checkstyle
+
+Checkstyle.checkstyleSettings
 ```
 
 ## Usage
@@ -43,13 +45,13 @@ setting the value of `checkstyleTarget in Test`.
 
 You can set `checkstyleConfig` like so in `build.sbt`:
 ```scala
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleConfig := Source.fromFile("checkstyle-config.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.ConfigSource.File("checkstyle-config.xml")
 ```
 
 You can also load remote config files by specifying a URL like so:
 ```scala
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleConfig :=
-  Source.fromURL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfig :=
+  Checkstyle.ConfigSource.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
 ```
 
 ### XSLT transformations
@@ -58,7 +60,9 @@ The `xsltTransformations` setting allows applying XSLT transformations to the XM
 
 You can set `xsltTransformations` like so in `build.sbt`:
 ```scala
-xsltTransformations := {
+import com.etsy.sbt.XSLTSettings
+
+Checkstyle.CheckstyleTasks.xsltTransformations := {
   Some(Set(XSLTSettings(baseDirectory(_ / "checkstyle-noframes.xml").value, target(_ / "checkstyle-report.html").value)))
 }
 ```
@@ -83,8 +87,7 @@ lazy val root = (project in file(".")).configs(IntegrationTest)
 
 Defaults.itSettings
 
-import com.etsy.sbt._
-com.etsy.sbt.Checkstyle.checkstyleSettings ++ Seq(
+Checkstyle.checkstyleSettings ++ Seq(
   Checkstyle.CheckstyleTasks.checkstyleConfig := file("my-checkstyle-config.xml"),
   Checkstyle.CheckstyleTasks.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
   Checkstyle.CheckstyleTasks.checkstyleTarget in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
