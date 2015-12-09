@@ -1,4 +1,0 @@
-# Check that the checkstyle report is created
-> compile:checkstyle
-$ exists target/checkstyle-report.xml
-$ exists target/checkstyle-config.xml

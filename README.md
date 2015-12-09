@@ -61,12 +61,13 @@ xsltTransformations := {
 
 To fail the build when Checkstyle issues are found use the `checkstyle-check` task.
 
-You can control what severity of issues should break the build by setting the `checkstyleCheckSeverityLevel` in your `build.sbt` as follows:
+You can control what severity of issues should break the build by setting the `checkstyleSeverityLevel` in your `build.sbt` as follows:
 ```scala
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleCheckSeverityLevel := "info"
+import com.etsy.sbt.Checkstyle.CheckstyleSeverityLevel._
+com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(CheckstyleSeverityLevel.Error)
 ```
 
-Possible values are `"ignore"`, `"info"`, `"warning"` and `"error"`. The default is `"error"`.
+Possible values are defined by the `CheckstyleSeverityLevel` enumeration. The default is `None`.
 
 ### Integration tests
 
