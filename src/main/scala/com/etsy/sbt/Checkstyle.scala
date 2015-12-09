@@ -20,22 +20,20 @@ import scala.io.Source
 object Checkstyle extends Plugin {
 
   sealed abstract class ConfigSource(val location: String) {
-    def read(resources: Seq[File], log: Logger): String
+    def read(resources: Seq[File]): String
   }
 
   object ConfigSource {
     case class URL(url: String) extends ConfigSource(url) {
-      override def read(resources: Seq[sbt.File], log: Logger): String = Source.fromURL(url).mkString
+      override def read(resources: Seq[sbt.File]): String = Source.fromURL(url).mkString
     }
 
     case class File(path: String) extends ConfigSource(path) {
-      override def read(resources: Seq[sbt.File], log: Logger): String = Source.fromFile(path).mkString
+      override def read(resources: Seq[sbt.File]): String = Source.fromFile(path).mkString
     }
 
     case class Classpath(name: String) extends ConfigSource(name) {
-      override def read(resources: Seq[sbt.File], log: Logger): String = {
-        log.info("Resources: " + resources.size)
-        resources.foreach((f) => log.info("Resource: " + f))
+      override def read(resources: Seq[sbt.File]): String = {
         val classpath = resources.map((f) => f.toURI.toURL)
         val loader = new java.net.URLClassLoader(classpath.toArray, getClass.getClassLoader)
         Source.fromInputStream(loader.getResourceAsStream(name)).mkString
@@ -79,7 +77,7 @@ object Checkstyle extends Plugin {
       outputDir.mkdirs()
     }
 
-    val config = scala.xml.XML.loadString((checkstyleConfig in conf).value.read((resources in Compile).value, streams.value.log))
+    val config = scala.xml.XML.loadString((checkstyleConfig in conf).value.read((resources in Compile).value))
     scala.xml.XML.save(configFile, config, "UTF-8", xmlDecl = true,
       scala.xml.dtd.DocType("module", scala.xml.dtd.PublicID("-//Puppy Crawl//DTD Check Configuration 1.3//EN",
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd"), Nil))
