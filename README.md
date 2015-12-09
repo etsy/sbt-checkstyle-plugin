@@ -43,15 +43,20 @@ default.  This can be changed by setting the value of
 `target/checkstyle-test-report.xml`, but this can be changed by
 setting the value of `checkstyleTarget in Test`.
 
-You can set `checkstyleConfig` like so in `build.sbt`:
+To change the checkstyle configuration file set `checkstyleConfig` in `build.sbt`:
 ```scala
 Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.ConfigSource.File("checkstyle-config.xml")
 ```
 
-You can also load remote config files by specifying a URL like so:
+You can also load remote configuration files by specifying a URL:
 ```scala
 Checkstyle.CheckstyleTasks.checkstyleConfig :=
   Checkstyle.ConfigSource.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
+```
+
+Or load configuration files from the classpath by specifying a resource name:
+```scala
+Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.ConfigSource.File("com/etsy/checkstyle-config.xml")
 ```
 
 ### XSLT transformations
