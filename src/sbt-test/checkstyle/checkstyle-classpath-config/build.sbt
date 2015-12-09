@@ -7,4 +7,4 @@ organization := "com.etsy"
 import com.etsy.sbt.Checkstyle
 
 Checkstyle.checkstyleSettings
-Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.ConfigSource.Classpath("com/etsy/sbt/google_checks.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.CheckstyleConfig.Classpath("com/etsy/sbt/google_checks.xml")

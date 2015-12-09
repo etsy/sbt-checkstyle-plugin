@@ -19,20 +19,20 @@ import scala.io.Source
   */
 object Checkstyle extends Plugin {
 
-  sealed abstract class ConfigSource(val location: String) {
+  sealed abstract class CheckstyleConfig(val location: String) {
     def read(resources: Seq[File]): String
   }
 
-  object ConfigSource {
-    case class URL(url: String) extends ConfigSource(url) {
+  object CheckstyleConfig {
+    case class URL(url: String) extends CheckstyleConfig(url) {
       override def read(resources: Seq[sbt.File]): String = Source.fromURL(url).mkString
     }
 
-    case class File(path: String) extends ConfigSource(path) {
+    case class File(path: String) extends CheckstyleConfig(path) {
       override def read(resources: Seq[sbt.File]): String = Source.fromFile(path).mkString
     }
 
-    case class Classpath(name: String) extends ConfigSource(name) {
+    case class Classpath(name: String) extends CheckstyleConfig(name) {
       override def read(resources: Seq[sbt.File]): String = {
         val classpath = resources.map((f) => f.toURI.toURL)
         val loader = new java.net.URLClassLoader(classpath.toArray, getClass.getClassLoader)
@@ -54,7 +54,7 @@ object Checkstyle extends Plugin {
   object CheckstyleTasks {
     val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
     val checkstyleTarget = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
-    val checkstyleConfig = SettingKey[ConfigSource]("checkstyle-config", "The location of the checkstyle configuration file")
+    val checkstyleConfig = SettingKey[CheckstyleConfig]("checkstyle-config", "The location of the checkstyle configuration file")
     val xsltTransformations = SettingKey[Option[Set[XSLTSettings]]]("xslt-transformations", "An optional set of XSLT transformations to be applied to the checkstyle output")
     val checkstyleSeverityLevel = SettingKey[Option[CheckstyleSeverityLevel]]("checkstyle-severity-level", "Sets the severity levels which should fail the build")
   }
@@ -176,7 +176,7 @@ object Checkstyle extends Plugin {
   val checkstyleSettings: Seq[Def.Setting[_]] = Seq(
     checkstyleTarget <<= target(_ / "checkstyle-report.xml"),
     checkstyleTarget in Test <<= target(_ / "checkstyle-test-report.xml"),
-    checkstyleConfig := ConfigSource.File("checkstyle-config.xml"),
+    checkstyleConfig := CheckstyleConfig.File("checkstyle-config.xml"),
     checkstyleConfig in Test <<= checkstyleConfig,
     checkstyle in Compile <<= checkstyleTask(Compile),
     checkstyle in Test <<= checkstyleTask(Test),
