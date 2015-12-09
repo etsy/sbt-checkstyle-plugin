@@ -1,6 +1,6 @@
 version := "0.1"
 
-name := "checkstyle-classpath-config"
+name := "checkstyle-classpath-config-dependency"
 
 organization := "com.etsy"
 
