@@ -74,8 +74,6 @@ Checkstyle.CheckstyleTasks.xsltTransformations := {
 
 ### Failing the build
 
-To fail the build when Checkstyle issues are found use the `checkstyle-check` task.
-
 You can control what severity of issues should break the build by setting the `checkstyleSeverityLevel` in your `build.sbt` as follows:
 ```scala
 Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
