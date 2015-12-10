@@ -7,5 +7,5 @@ organization := "com.etsy"
 import com.etsy.sbt.Checkstyle
 
 Checkstyle.checkstyleSettings
-Checkstyle.CheckstyleTasks.checkstyleConfig :=
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation :=
   Some(Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/etsy/sbt-checkstyle-plugin/master/src/sbt-test/checkstyle/checkstyle/checkstyle-config.xml"))

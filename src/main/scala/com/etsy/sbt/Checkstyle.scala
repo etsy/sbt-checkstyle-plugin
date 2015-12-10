@@ -68,15 +68,11 @@ object Checkstyle extends Plugin {
     * @param conf The configuration (Compile or Test) in which context to execute the checkstyle command
     */
   def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
-    val configFile = (checkstyleConfig in conf).value.getAbsolutePath
     val outputFile = (checkstyleTarget in conf).value.getAbsolutePath
     val targetFolder = (checkstyleTarget in conf).value.getParentFile
     val configFile = targetFolder + "/checkstyle-config.xml"
 
-    val outputDir = target.value
-    if (!outputDir.exists()) {
-      outputDir.mkdirs()
-    }
+    targetFolder.mkdirs()
 
     val resolvedCheckstyleConfig = (checkstyleConfigLocation in conf).value
       .orElse(Some(CheckstyleConfig.File((checkstyleConfig in conf).value.absolutePath))).get
