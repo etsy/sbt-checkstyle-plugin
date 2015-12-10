@@ -1,11 +1,11 @@
 version := "0.1"
 
-name := "checkstyle-test"
+name := "checkstyle-check"
 
 organization := "com.etsy"
 
-com.etsy.sbt.Checkstyle.checkstyleSettings
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleConfig := file("my-checkstyle-config.xml")
+import com.etsy.sbt.Checkstyle
 
-import com.etsy.sbt.Checkstyle.CheckstyleSeverityLevel._
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(CheckstyleSeverityLevel.Error)
+Checkstyle.checkstyleSettings
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("my-checkstyle-config.xml"))
+Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)

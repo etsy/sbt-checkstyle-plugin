@@ -8,6 +8,8 @@ import sbt.Def.Initialize
 import sbt.Keys._
 import sbt._
 
+import scala.io.Source
+
 /**
   * An SBT plugin to run checkstyle over Java code
   *
@@ -16,6 +18,28 @@ import sbt._
   * @author Joseph Earl <joe@josephearl.co.uk>
   */
 object Checkstyle extends Plugin {
+
+  sealed abstract class CheckstyleConfig(val location: String) {
+    def read(resources: Seq[File]): String
+  }
+
+  object CheckstyleConfig {
+    case class URL(url: String) extends CheckstyleConfig(url) {
+      override def read(resources: Seq[sbt.File]): String = Source.fromURL(url).mkString
+    }
+
+    case class File(path: String) extends CheckstyleConfig(path) {
+      override def read(resources: Seq[sbt.File]): String = Source.fromFile(path).mkString
+    }
+
+    case class Classpath(name: String) extends CheckstyleConfig(name) {
+      override def read(resources: Seq[sbt.File]): String = {
+        val classpath = resources.map((f) => f.toURI.toURL)
+        val loader = new java.net.URLClassLoader(classpath.toArray, getClass.getClassLoader)
+        Source.fromInputStream(loader.getResourceAsStream(name)).mkString
+      }
+    }
+  }
 
   object CheckstyleSeverityLevel extends Enumeration {
     type CheckstyleSeverityLevel = Value
@@ -30,7 +54,8 @@ object Checkstyle extends Plugin {
   object CheckstyleTasks {
     val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
     val checkstyleTarget = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
-    val checkstyleConfig = SettingKey[File]("checkstyle-config", "The location of the checkstyle configuration file")
+    val checkstyleConfig = SettingKey[File]("checkstyle-config", "Deprecated, use checkstyleConfigLocation. The location of the checkstyle configuration file")
+    val checkstyleConfigLocation = SettingKey[Option[CheckstyleConfig]]("checkstyle-config-location", "The location of the checkstyle configuration file")
     val xsltTransformations = SettingKey[Option[Set[XSLTSettings]]]("xslt-transformations", "An optional set of XSLT transformations to be applied to the checkstyle output")
     val checkstyleSeverityLevel = SettingKey[Option[CheckstyleSeverityLevel]]("checkstyle-severity-level", "Sets the severity levels which should fail the build")
   }
@@ -43,18 +68,25 @@ object Checkstyle extends Plugin {
     * @param conf The configuration (Compile or Test) in which context to execute the checkstyle command
     */
   def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
-    val configFile = (checkstyleConfig in conf).value.getAbsolutePath
     val outputFile = (checkstyleTarget in conf).value.getAbsolutePath
-    val source = (javaSource in conf).value.getAbsolutePath
+    val targetFolder = (checkstyleTarget in conf).value.getParentFile
+    val configFile = targetFolder + "/checkstyle-config.xml"
 
-    val targetFolder = file(outputFile).getParentFile.getAbsolutePath
-    java.nio.file.Files.createDirectories(java.nio.file.Paths.get(targetFolder))
+    targetFolder.mkdirs()
+
+    val resolvedCheckstyleConfig = (checkstyleConfigLocation in conf).value
+      .orElse(Some(CheckstyleConfig.File((checkstyleConfig in conf).value.absolutePath))).get
+
+    val config = scala.xml.XML.loadString(resolvedCheckstyleConfig.read((resources in Compile).value))
+    scala.xml.XML.save(configFile, config, "UTF-8", xmlDecl = true,
+      scala.xml.dtd.DocType("module", scala.xml.dtd.PublicID("-//Puppy Crawl//DTD Check Configuration 1.3//EN",
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd"), Nil))
 
     val checkstyleArgs = Array(
       "-c", configFile, // checkstyle configuration file
+      (javaSource in conf).value.getAbsolutePath, // location of Java source file
       "-f", "xml", // output format
-      "-o", outputFile, // output file
-      source // location of Java source file
+      "-o", outputFile // output file
     )
 
     // Checkstyle calls System.exit which would exit SBT
@@ -146,6 +178,8 @@ object Checkstyle extends Plugin {
     checkstyleTarget in Test <<= target(_ / "checkstyle-test-report.xml"),
     checkstyleConfig := file("checkstyle-config.xml"),
     checkstyleConfig in Test <<= checkstyleConfig,
+    checkstyleConfigLocation := None,
+    checkstyleConfigLocation in Test <<= checkstyleConfigLocation,
     checkstyle in Compile <<= checkstyleTask(Compile),
     checkstyle in Test <<= checkstyleTask(Test),
     xsltTransformations := None,

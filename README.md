@@ -17,10 +17,12 @@ Add the following lines to `project/plugins.sbt`:
 addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "0.5.3")
 ```
 
-Then add the following line to `build.sbt`:
+Then add the following lines to `build.sbt`:
 
 ```scala
-com.etsy.sbt.Checkstyle.checkstyleSettings
+import com.etsy.sbt.Checkstyle
+
+Checkstyle.checkstyleSettings
 ```
 
 ## Usage
@@ -31,9 +33,9 @@ the `test:checkstyle` task.
 
 The Checkstyle configuration file is `./checkstyle-config.xml` by
 default.  This can be changed by setting the value of
-`checkstyleConfig`.  By default `test:checkstyle` uses the same
+`checkstyleConfigLocation`.  By default `test:checkstyle` uses the same
 configuration file, but this can be changed by setting the value of
-`checkstyleConfig in Test`.
+`checkstyleConfigLocation in Test`.
 
 The Checkstyle report is output to `target/checkstyle-report.xml` by
 default.  This can be changed by setting the value of
@@ -41,9 +43,20 @@ default.  This can be changed by setting the value of
 `target/checkstyle-test-report.xml`, but this can be changed by
 setting the value of `checkstyleTarget in Test`.
 
-You can set `checkstyleConfig` like so in `build.sbt`:
+To change the checkstyle configuration file set `checkstyleConfigLocation` in `build.sbt`:
 ```scala
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleConfig := file("checkstyle-config.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("checkstyle-config.xml"))
+```
+
+You can also load remote configuration files by specifying a URL:
+```scala
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation :=
+  Some(Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml"))
+```
+
+Or load configuration files from the classpath by specifying a resource name:
+```scala
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("com/etsy/checkstyle-config.xml"))
 ```
 
 ### XSLT transformations
@@ -52,7 +65,9 @@ The `xsltTransformations` setting allows applying XSLT transformations to the XM
 
 You can set `xsltTransformations` like so in `build.sbt`:
 ```scala
-xsltTransformations := {
+import com.etsy.sbt.XSLTSettings
+
+Checkstyle.CheckstyleTasks.xsltTransformations := {
   Some(Set(XSLTSettings(baseDirectory(_ / "checkstyle-noframes.xml").value, target(_ / "checkstyle-report.html").value)))
 }
 ```
@@ -63,8 +78,7 @@ To fail the build when Checkstyle issues are found use the `checkstyle-check` ta
 
 You can control what severity of issues should break the build by setting the `checkstyleSeverityLevel` in your `build.sbt` as follows:
 ```scala
-import com.etsy.sbt.Checkstyle.CheckstyleSeverityLevel._
-com.etsy.sbt.Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(CheckstyleSeverityLevel.Error)
+Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
 ```
 
 Possible values are defined by the `CheckstyleSeverityLevel` enumeration. The default is `None`.
@@ -77,9 +91,8 @@ lazy val root = (project in file(".")).configs(IntegrationTest)
 
 Defaults.itSettings
 
-import com.etsy.sbt._
-com.etsy.sbt.Checkstyle.checkstyleSettings ++ Seq(
-  Checkstyle.CheckstyleTasks.checkstyleConfig := file("my-checkstyle-config.xml"),
+Checkstyle.checkstyleSettings ++ Seq(
+  Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("my-checkstyle-config.xml")),
   Checkstyle.CheckstyleTasks.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
   Checkstyle.CheckstyleTasks.checkstyleTarget in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
 )
