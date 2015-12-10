@@ -54,7 +54,8 @@ object Checkstyle extends Plugin {
   object CheckstyleTasks {
     val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
     val checkstyleTarget = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
-    val checkstyleConfig = SettingKey[CheckstyleConfig]("checkstyle-config", "The location of the checkstyle configuration file")
+    val checkstyleConfig = SettingKey[File]("checkstyle-config", "Deprecated, use checkstyleConfigLocation. The location of the checkstyle configuration file")
+    val checkstyleConfigLocation = SettingKey[Option[CheckstyleConfig]]("checkstyle-config-location", "The location of the checkstyle configuration file")
     val xsltTransformations = SettingKey[Option[Set[XSLTSettings]]]("xslt-transformations", "An optional set of XSLT transformations to be applied to the checkstyle output")
     val checkstyleSeverityLevel = SettingKey[Option[CheckstyleSeverityLevel]]("checkstyle-severity-level", "Sets the severity levels which should fail the build")
   }
@@ -77,7 +78,10 @@ object Checkstyle extends Plugin {
       outputDir.mkdirs()
     }
 
-    val config = scala.xml.XML.loadString((checkstyleConfig in conf).value.read((resources in Compile).value))
+    val resolvedCheckstyleConfig = (checkstyleConfigLocation in conf).value
+      .orElse(Some(CheckstyleConfig.File((checkstyleConfig in conf).value.absolutePath))).get
+
+    val config = scala.xml.XML.loadString(resolvedCheckstyleConfig.read((resources in Compile).value))
     scala.xml.XML.save(configFile, config, "UTF-8", xmlDecl = true,
       scala.xml.dtd.DocType("module", scala.xml.dtd.PublicID("-//Puppy Crawl//DTD Check Configuration 1.3//EN",
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd"), Nil))
@@ -176,8 +180,10 @@ object Checkstyle extends Plugin {
   val checkstyleSettings: Seq[Def.Setting[_]] = Seq(
     checkstyleTarget <<= target(_ / "checkstyle-report.xml"),
     checkstyleTarget in Test <<= target(_ / "checkstyle-test-report.xml"),
-    checkstyleConfig := CheckstyleConfig.File("checkstyle-config.xml"),
+    checkstyleConfig := file("checkstyle-config.xml"),
     checkstyleConfig in Test <<= checkstyleConfig,
+    checkstyleConfigLocation := None,
+    checkstyleConfigLocation in Test <<= checkstyleConfigLocation,
     checkstyle in Compile <<= checkstyleTask(Compile),
     checkstyle in Test <<= checkstyleTask(Test),
     xsltTransformations := None,

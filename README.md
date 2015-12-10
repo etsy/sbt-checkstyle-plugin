@@ -33,9 +33,9 @@ the `test:checkstyle` task.
 
 The Checkstyle configuration file is `./checkstyle-config.xml` by
 default.  This can be changed by setting the value of
-`checkstyleConfig`.  By default `test:checkstyle` uses the same
+`checkstyleConfigLocation`.  By default `test:checkstyle` uses the same
 configuration file, but this can be changed by setting the value of
-`checkstyleConfig in Test`.
+`checkstyleConfigLocation in Test`.
 
 The Checkstyle report is output to `target/checkstyle-report.xml` by
 default.  This can be changed by setting the value of
@@ -43,20 +43,20 @@ default.  This can be changed by setting the value of
 `target/checkstyle-test-report.xml`, but this can be changed by
 setting the value of `checkstyleTarget in Test`.
 
-To change the checkstyle configuration file set `checkstyleConfig` in `build.sbt`:
+To change the checkstyle configuration file set `checkstyleConfigLocation` in `build.sbt`:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.CheckstyleConfig.File("checkstyle-config.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("checkstyle-config.xml"))
 ```
 
 You can also load remote configuration files by specifying a URL:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfig :=
-  Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation :=
+  Some(Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml"))
 ```
 
 Or load configuration files from the classpath by specifying a resource name:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfig := Checkstyle.CheckstyleConfig.File("com/etsy/checkstyle-config.xml")
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("com/etsy/checkstyle-config.xml"))
 ```
 
 ### XSLT transformations
@@ -93,7 +93,7 @@ lazy val root = (project in file(".")).configs(IntegrationTest)
 Defaults.itSettings
 
 Checkstyle.checkstyleSettings ++ Seq(
-  Checkstyle.CheckstyleTasks.checkstyleConfig := file("my-checkstyle-config.xml"),
+  Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("my-checkstyle-config.xml")),
   Checkstyle.CheckstyleTasks.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
   Checkstyle.CheckstyleTasks.checkstyleTarget in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
 )
