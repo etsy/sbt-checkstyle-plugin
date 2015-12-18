@@ -20,7 +20,7 @@ addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "1.0.0")
 Then add the following lines to `build.sbt`:
 
 ```scala
-import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.checkstyle._
 
 Checkstyle.checkstyleSettings
 ```
@@ -33,30 +33,30 @@ the `test:checkstyle` task.
 
 The Checkstyle configuration file is `./checkstyle-config.xml` by
 default.  This can be changed by setting the value of
-`checkstyleConfigLocation`.  By default `test:checkstyle` uses the same
+`Checkstyle.configLocation`.  By default `test:checkstyle` uses the same
 configuration file, but this can be changed by setting the value of
-`checkstyleConfigLocation in Test`.
+`Checkstyle.configLocation in Test`.
 
 The Checkstyle report is output to `target/checkstyle-report.xml` by
 default.  This can be changed by setting the value of
-`checkstyleTarget`.  `test:checkstyle` outputs to
+`Checkstyle.outputFile`.  `test:checkstyle` outputs to
 `target/checkstyle-test-report.xml`, but this can be changed by
-setting the value of `checkstyleTarget in Test`.
+setting the value of `Checkstyle.outputFile in Test`.
 
-To change the checkstyle configuration file set `checkstyleConfigLocation` in `build.sbt`:
+To change the checkstyle configuration file set `Checkstyle.configLocation` in `build.sbt`:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("checkstyle-config.xml"))
+Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Checkstyle.CheckstyleConfig.File("checkstyle-config.xml")
 ```
 
 You can also load remote configuration files by specifying a URL:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfigLocation :=
-  Some(Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml"))
+Checkstyle.configLocation :=
+  Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
 ```
 
 Or load configuration files from the classpath by specifying a resource name:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("com/etsy/checkstyle-config.xml"))
+Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("com/etsy/checkstyle-config.xml")
 ```
 
 ### XSLT transformations
@@ -65,9 +65,9 @@ The `xsltTransformations` setting allows applying XSLT transformations to the XM
 
 You can set `xsltTransformations` like so in `build.sbt`:
 ```scala
-import com.etsy.sbt.XSLTSettings
+import com.etsy.sbt.checkstyle._
 
-Checkstyle.CheckstyleTasks.xsltTransformations := {
+Checkstyle.xsltTransformations := {
   Some(Set(XSLTSettings(baseDirectory(_ / "checkstyle-noframes.xml").value, target(_ / "checkstyle-report.html").value)))
 }
 ```
@@ -76,7 +76,7 @@ Checkstyle.CheckstyleTasks.xsltTransformations := {
 
 You can control what severity of issues should break the build by setting the `checkstyleSeverityLevel` in your `build.sbt` as follows:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
+Checkstyle.severityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
 ```
 
 Possible values are defined by the `CheckstyleSeverityLevel` enumeration. The default is `None`.
@@ -90,9 +90,9 @@ lazy val root = (project in file(".")).configs(IntegrationTest)
 Defaults.itSettings
 
 Checkstyle.checkstyleSettings ++ Seq(
-  Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.File("my-checkstyle-config.xml")),
-  Checkstyle.CheckstyleTasks.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
-  Checkstyle.CheckstyleTasks.checkstyleTarget in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
+  Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("my-checkstyle-config.xml"),
+  Checkstyle.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
+  Checkstyle.outputFile in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
 )
 ```
 

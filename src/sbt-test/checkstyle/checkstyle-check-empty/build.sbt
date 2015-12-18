@@ -4,7 +4,7 @@ name := "checkstyle-check-empty"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.checkstyle._
 
 Checkstyle.checkstyleSettings
-Checkstyle.CheckstyleTasks.checkstyleSeverityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
+Checkstyle.severityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)

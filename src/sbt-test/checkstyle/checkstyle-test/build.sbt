@@ -4,6 +4,6 @@ name := "checkstyle-test"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.checkstyle._
 
 Checkstyle.checkstyleSettings

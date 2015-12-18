@@ -1,4 +1,4 @@
-package com.etsy.sbt
+package com.etsy.sbt.checkstyle
 
 import java.io.File
 

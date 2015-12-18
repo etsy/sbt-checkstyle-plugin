@@ -4,7 +4,7 @@ name := "checkstyle-test"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.checkstyle._
 
 Checkstyle.checkstyleSettings
-Checkstyle.CheckstyleTasks.checkstyleConfig := file("checkstyle-config.xml")
+Checkstyle.configLocation := CheckstyleConfig.File("checkstyle-config.xml")

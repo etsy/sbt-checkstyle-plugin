@@ -4,7 +4,7 @@ name := "checkstyle-classpath-config"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.checkstyle._
 
 Checkstyle.checkstyleSettings
-Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Some(Checkstyle.CheckstyleConfig.Classpath("com/etsy/sbt/google_checks.xml"))
+Checkstyle.configLocation := Checkstyle.CheckstyleConfig.Classpath("com/etsy/sbt/google_checks.xml")

@@ -4,8 +4,8 @@ name := "checkstyle-remote-config"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.Checkstyle
+import com.etsy.sbt.checkstyle._
 
 Checkstyle.checkstyleSettings
-Checkstyle.CheckstyleTasks.checkstyleConfigLocation :=
-  Some(Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/etsy/sbt-checkstyle-plugin/master/src/sbt-test/checkstyle/checkstyle/checkstyle-config.xml"))
+Checkstyle.configLocation :=
+  Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/etsy/sbt-checkstyle-plugin/master/src/sbt-test/checkstyle/checkstyle/checkstyle-config.xml")

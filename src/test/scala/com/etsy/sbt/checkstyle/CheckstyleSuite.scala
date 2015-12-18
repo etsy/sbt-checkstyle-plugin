@@ -1,10 +1,10 @@
-package com.etsy.sbt
+package com.etsy.sbt.checkstyle
 
 import org.scalatest.junit.JUnitSuite
 import org.junit.Assert._
 import org.junit.Test
 import org.junit.Rule
-import com.etsy.sbt.Checkstyle._
+import Checkstyle._
 import scala.annotation.meta.getter
 import org.junit.contrib.java.lang.system.ExpectedSystemExit
 
