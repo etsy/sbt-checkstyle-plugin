@@ -6,5 +6,4 @@ organization := "com.etsy"
 
 import com.etsy.sbt.checkstyle._
 
-Checkstyle.checkstyleSettings
-Checkstyle.configLocation := Checkstyle.CheckstyleConfig.Classpath("com/etsy/sbt/google_checks.xml")
+Checkstyle.configLocation := CheckstyleConfig.Classpath("com/etsy/sbt/google_checks.xml")

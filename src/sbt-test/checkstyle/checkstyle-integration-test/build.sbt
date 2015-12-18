@@ -10,9 +10,6 @@ Defaults.itSettings
 
 import com.etsy.sbt.checkstyle._
 
-Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("my-checkstyle-config.xml")
-Checkstyle.checkstyleSettings ++ Seq(
-  Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("test-checkstyle-config.xml"),
-  Checkstyle.checkstyle       in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest),
-  Checkstyle.outputFile in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
-)
+Checkstyle.configLocation := CheckstyleConfig.File("my-checkstyle-config.xml")
+Checkstyle.checkstyle in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest)
+Checkstyle.outputFile in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")

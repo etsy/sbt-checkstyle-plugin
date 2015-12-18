@@ -6,5 +6,4 @@ organization := "com.etsy"
 
 import com.etsy.sbt.checkstyle._
 
-Checkstyle.checkstyleSettings
-Checkstyle.severityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
+Checkstyle.severityLevel := Some(CheckstyleSeverityLevel.Error)

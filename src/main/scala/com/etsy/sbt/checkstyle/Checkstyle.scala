@@ -2,13 +2,12 @@ package com.etsy.sbt.checkstyle
 
 import javax.xml.transform.stream.StreamSource
 
+import com.etsy.sbt.checkstyle.CheckstyleSeverityLevel.CheckstyleSeverityLevel
 import com.puppycrawl.tools.checkstyle.Main.{main => CheckstyleMain}
 import net.sf.saxon.s9api.Processor
 import sbt.Def.Initialize
 import sbt.Keys._
 import sbt._
-
-import scala.io.Source
 
 /**
   * An SBT plugin to run checkstyle over Java code
@@ -17,38 +16,8 @@ import scala.io.Source
   * @author Alejandro Rivera <alejandro.rivera.lopez@gmail.com>
   * @author Joseph Earl <joe@josephearl.co.uk>
   */
-object Checkstyle extends Plugin {
-  sealed abstract class CheckstyleConfig(val location: String) {
-    def read(resources: Seq[File]): String
-  }
-
-  object CheckstyleConfig {
-    case class URL(url: String) extends CheckstyleConfig(url) {
-      override def read(resources: Seq[sbt.File]): String = Source.fromURL(url).mkString
-    }
-
-    case class File(path: String) extends CheckstyleConfig(path) {
-      override def read(resources: Seq[sbt.File]): String = Source.fromFile(path).mkString
-    }
-
-    case class Classpath(name: String) extends CheckstyleConfig(name) {
-      override def read(resources: Seq[sbt.File]): String = {
-        val classpath = resources.map((f) => f.toURI.toURL)
-        val loader = new java.net.URLClassLoader(classpath.toArray, getClass.getClassLoader)
-        Source.fromInputStream(loader.getResourceAsStream(name)).mkString
-      }
-    }
-  }
-
-  object CheckstyleSeverityLevel extends Enumeration {
-    type CheckstyleSeverityLevel = Value
-    val Ignore = Value("ignore")
-    val Info = Value("info")
-    val Warning = Value("warning")
-    val Error = Value("error")
-  }
-
-  import Checkstyle.CheckstyleSeverityLevel._
+object Checkstyle extends AutoPlugin {
+  override def trigger: PluginTrigger = allRequirements
 
   val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
   val outputFile = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
@@ -166,7 +135,7 @@ object Checkstyle extends Plugin {
     }
   }
 
-  val checkstyleSettings: Seq[Def.Setting[_]] = Seq(
+  override def projectSettings: Seq[Def.Setting[_]] = Seq(
     outputFile <<= target(_ / "checkstyle-report.xml"),
     outputFile in Test <<= target(_ / "checkstyle-test-report.xml"),
     configLocation := CheckstyleConfig.File("checkstyle-config.xml"),

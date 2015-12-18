@@ -6,5 +6,4 @@ organization := "com.etsy"
 
 import com.etsy.sbt.checkstyle._
 
-Checkstyle.checkstyleSettings
 Checkstyle.configLocation := CheckstyleConfig.File("checkstyle-config.xml")

@@ -17,12 +17,12 @@ Add the following lines to `project/plugins.sbt`:
 addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "1.0.0")
 ```
 
-Then add the following lines to `build.sbt`:
+sbt-checkstyle-plugin is an AutoPlugin, so there is no need to modify the `build.sbt` file to enable it.
+
+If you want to modify any of the default settings, you should add the following import to `build.sbt`, however:
 
 ```scala
 import com.etsy.sbt.checkstyle._
-
-Checkstyle.checkstyleSettings
 ```
 
 ## Usage
@@ -65,8 +65,6 @@ The `xsltTransformations` setting allows applying XSLT transformations to the XM
 
 You can set `xsltTransformations` like so in `build.sbt`:
 ```scala
-import com.etsy.sbt.checkstyle._
-
 Checkstyle.xsltTransformations := {
   Some(Set(XSLTSettings(baseDirectory(_ / "checkstyle-noframes.xml").value, target(_ / "checkstyle-report.html").value)))
 }
