@@ -45,7 +45,7 @@ setting the value of `Checkstyle.outputFile in Test`.
 
 To change the checkstyle configuration file set `Checkstyle.configLocation` in `build.sbt`:
 ```scala
-Checkstyle.CheckstyleTasks.checkstyleConfigLocation := Checkstyle.CheckstyleConfig.File("checkstyle-config.xml")
+Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("checkstyle-config.xml")
 ```
 
 You can also load remote configuration files by specifying a URL:
