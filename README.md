@@ -45,18 +45,18 @@ setting the value of `Checkstyle.outputFile in Test`.
 
 To change the checkstyle configuration file set `Checkstyle.configLocation` in `build.sbt`:
 ```scala
-Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("checkstyle-config.xml")
+Checkstyle.configLocation := CheckstyleConfig.File("checkstyle-config.xml")
 ```
 
 You can also load remote configuration files by specifying a URL:
 ```scala
 Checkstyle.configLocation :=
-  Checkstyle.CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
+  CheckstyleConfig.URL("https://raw.githubusercontent.com/checkstyle/checkstyle/master/config/checkstyle_checks.xml")
 ```
 
 Or load configuration files from the classpath by specifying a resource name:
 ```scala
-Checkstyle.configLocation := Checkstyle.CheckstyleConfig.File("com/etsy/checkstyle-config.xml")
+Checkstyle.configLocation := CheckstyleConfig.File("com/etsy/checkstyle-config.xml")
 ```
 
 ### XSLT transformations
@@ -74,7 +74,7 @@ Checkstyle.xsltTransformations := {
 
 You can control what severity of issues should break the build by setting the `checkstyleSeverityLevel` in your `build.sbt` as follows:
 ```scala
-Checkstyle.severityLevel := Some(Checkstyle.CheckstyleSeverityLevel.Error)
+Checkstyle.severityLevel := Some(CheckstyleSeverityLevel.Error)
 ```
 
 Possible values are defined by the `CheckstyleSeverityLevel` enumeration. The default is `None`.
