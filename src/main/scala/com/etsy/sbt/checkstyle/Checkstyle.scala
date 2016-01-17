@@ -65,30 +65,42 @@ object Checkstyle extends AutoPlugin {
 
     if (file(outputLocation).exists && severityLevel.value.isDefined) {
       val log = streams.value.log
-      val report = scala.xml.XML.loadFile(file(outputLocation))
-      val checkstyleSeverityLevelIndex = CheckstyleSeverityLevel.values.toArray.indexOf(severityLevel.value.get)
-      val appliedCheckstyleSeverityLevels = CheckstyleSeverityLevel.values.drop(checkstyleSeverityLevelIndex)
-
-      var issuesFound = 0
-      (report \ "file").foreach { file =>
-        (file \ "error").foreach { error =>
-          val severity = CheckstyleSeverityLevel.withName(error.attribute("severity").get.head.text)
-          if (appliedCheckstyleSeverityLevels.contains(severity)) {
-            val lineNumber = error.attribute("line").get.head.text
-            val filename = file.attribute("name").get.head.text
-            val errorMessage = error.attribute("message").get.head.text
-            log.error("Checkstyle " + severity + " found in " + filename + ":" + lineNumber + ": " + errorMessage)
-
-            issuesFound += 1
-          }
-        }
-      }
+      val issuesFound = processIssues(log, outputLocation, severityLevel.value.get)
 
       if (issuesFound > 0) {
         log.error(issuesFound + " issue(s) found in Checkstyle report: " + outputLocation + "")
         sys.exit(1)
       }
     }
+  }
+
+  /**
+    * Processes style issues found by Checkstyle, returning a count of the number of issues
+    *
+    * @param log The SBT Logger
+    * @param outputLocation The location of the Checkstyle report
+    * @param severityLevel The severity level at which to fail the build if style issues exist at that level
+    * @return A count of the total number of issues processed
+    */
+  private def processIssues(log: Logger, outputLocation: String, severityLevel: CheckstyleSeverityLevel): Int = {
+    val report = scala.xml.XML.loadFile(file(outputLocation))
+    val checkstyleSeverityLevelIndex = CheckstyleSeverityLevel.values.toArray.indexOf(severityLevel)
+    val appliedCheckstyleSeverityLevels = CheckstyleSeverityLevel.values.drop(checkstyleSeverityLevelIndex)
+
+
+    (report \ "file").flatMap { file =>
+      (file \ "error").map { error =>
+        val severity = CheckstyleSeverityLevel.withName(error.attribute("severity").get.head.text)
+        appliedCheckstyleSeverityLevels.contains(severity) match {
+          case false => 0
+          case true => val lineNumber = error.attribute("line").get.head.text
+            val filename = file.attribute("name").get.head.text
+            val errorMessage = error.attribute("message").get.head.text
+            log.error("Checkstyle " + severity + " found in " + filename + ":" + lineNumber + ": " + errorMessage)
+            1
+        }
+      }
+    }.sum
   }
 
   /**

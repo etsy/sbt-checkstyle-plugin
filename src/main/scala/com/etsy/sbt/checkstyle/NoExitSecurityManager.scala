@@ -5,7 +5,7 @@ import java.security.Permission
 /**
   * A SecurityManager that throws an Exception if the exitVM
   * permission is checked.
-  * 
+  *
   * @author Andrew Johnson
   */
 class NoExitSecurityManager extends SecurityManager {
