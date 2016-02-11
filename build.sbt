@@ -4,7 +4,7 @@ name := "sbt-checkstyle-plugin"
 
 organization := "com.etsy"
 
-version := "2.0.1-SNAPSHOT"
+version := "2.1.1-SNAPSHOT"
 
 scalaVersion := "2.10.4"
 

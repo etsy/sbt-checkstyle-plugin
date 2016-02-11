@@ -4,7 +4,7 @@ This project provides an SBT 0.13+ plugin for running Checkstyle over
 Java source files.  For more information about Checkstyle, see
 [http://checkstyle.sourceforge.net/](http://checkstyle.sourceforge.net/)
 
-This plugin uses version 6.13 of Checkstyle.
+This plugin uses version 6.15 of Checkstyle.
 
 This is a fork of the sbt-code-quality project found
 [here](https://github.com/corux/sbt-code-quality).
@@ -14,7 +14,7 @@ This is a fork of the sbt-code-quality project found
 Add the following lines to `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "2.0.0")
+addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "2.1.0")
 ```
 
 sbt-checkstyle-plugin is an AutoPlugin, so there is no need to modify the `build.sbt` file to enable it.
