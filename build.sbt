@@ -9,7 +9,7 @@ version := "2.0.1-SNAPSHOT"
 scalaVersion := "2.10.4"
 
 libraryDependencies ++= Seq(
-  "com.puppycrawl.tools" % "checkstyle" % "6.13",
+  "com.puppycrawl.tools" % "checkstyle" % "6.15",
   "net.sf.saxon" % "Saxon-HE" % "9.6.0-5",
   "org.scalatest" % "scalatest_2.10" % "2.2.1" % "test",
   "junit" % "junit" % "4.11" % "test",
