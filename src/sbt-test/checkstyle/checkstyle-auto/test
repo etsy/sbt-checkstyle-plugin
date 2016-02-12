@@ -1,0 +1,3 @@
+# Check that checkstyle is run automatically on compile
+> compile
+$ exists target/checkstyle-report.xml

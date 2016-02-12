@@ -1,0 +1,3 @@
+# Check that checkstyle is run automatically on test:compile
+> test:compile
+$ exists target/checkstyle-test-report.xml
