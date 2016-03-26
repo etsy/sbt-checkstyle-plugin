@@ -4,8 +4,6 @@ name := "checkstyle-test"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.checkstyle._
+checkstyleConfigLocation := CheckstyleConfigLocation.File("checkstyle-config.xml")
 
-Checkstyle.configLocation := CheckstyleConfig.File("checkstyle-config.xml")
-
-(Checkstyle.checkstyle in Compile) <<= (Checkstyle.checkstyle in Compile) triggeredBy (compile in Compile)
+(checkstyle in Compile) <<= (checkstyle in Compile) triggeredBy (compile in Compile)

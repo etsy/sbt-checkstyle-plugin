@@ -7,4 +7,4 @@ import java.io.File
  *
  * @author Andrew Johnson
  */
-case class XSLTSettings(xslt: File, output: File)
+case class CheckstyleXSLTSettings(xslt: File, output: File)

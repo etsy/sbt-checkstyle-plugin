@@ -1,7 +1,7 @@
 version := "0.1"
 
-name := "checkstyle-test"
+name := "checkstyle-test-auto"
 
 organization := "com.etsy"
 
-(Checkstyle.checkstyle in Test) <<= (Checkstyle.checkstyle in Test) triggeredBy (compile in Test)
+(checkstyle in Test) <<= (checkstyle in Test) triggeredBy (compile in Test)

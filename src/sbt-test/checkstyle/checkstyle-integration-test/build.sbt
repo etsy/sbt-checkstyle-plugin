@@ -8,8 +8,6 @@ lazy val root = (project in file(".")).configs(IntegrationTest)
 
 Defaults.itSettings
 
-import com.etsy.sbt.checkstyle._
-
-Checkstyle.configLocation := CheckstyleConfig.File("my-checkstyle-config.xml")
-Checkstyle.checkstyle in IntegrationTest <<= Checkstyle.checkstyleTask(IntegrationTest)
-Checkstyle.outputFile in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
+checkstyleConfigLocation := CheckstyleConfigLocation.File("my-checkstyle-config.xml")
+checkstyle in IntegrationTest <<= checkstyleTask(IntegrationTest)
+checkstyleOutputFile in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
