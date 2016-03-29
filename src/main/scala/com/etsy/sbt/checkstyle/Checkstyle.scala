@@ -2,51 +2,44 @@ package com.etsy.sbt.checkstyle
 
 import javax.xml.transform.stream.StreamSource
 
-import com.etsy.sbt.checkstyle.CheckstyleSeverityLevel.CheckstyleSeverityLevel
+import com.etsy.sbt.checkstyle.CheckstyleSeverityLevel._
 import com.puppycrawl.tools.checkstyle.Main.{main => CheckstyleMain}
 import net.sf.saxon.s9api.Processor
-import sbt.Def.Initialize
 import sbt.Keys._
 import sbt._
 
 /**
-  * An SBT plugin to run checkstyle over Java code
+  * A Scala wrapper around the Checkstyle Java API
   *
   * @author Andrew Johnson <ajohnson@etsy.com>
-  * @author Alejandro Rivera <alejandro.rivera.lopez@gmail.com>
   * @author Joseph Earl <joe@josephearl.co.uk>
   */
-object Checkstyle extends AutoPlugin {
-  override def trigger: PluginTrigger = allRequirements
-
-  val checkstyle = TaskKey[Unit]("checkstyle", "Runs checkstyle")
-  val outputFile = SettingKey[File]("checkstyle-target", "The location of the generated checkstyle report")
-  val configLocation = SettingKey[CheckstyleConfig]("checkstyle-config-location", "The location of the checkstyle configuration file")
-  val xsltTransformations = SettingKey[Option[Set[XSLTSettings]]]("xslt-transformations", "An optional set of XSLT transformations to be applied to the checkstyle output")
-  val severityLevel = SettingKey[Option[CheckstyleSeverityLevel]]("checkstyle-severity-level", "Sets the severity levels which should fail the build")
-
+object Checkstyle {
   /**
     * Runs checkstyle
     *
-    * @param conf The configuration (Compile or Test) in which context to execute the checkstyle command
+    * @param javaSource The Java source path.
+    * @param outputFile The Checkstyle report output path.
+    * @param configLocation The Checkstyle config location.
+    * @param xsltTransformations XSLT transformations to apply.
+    * @param severityLevel The severity level used to fail the build.
     */
-  def checkstyleTask(conf: Configuration): Initialize[Task[Unit]] = Def.task {
-    val outputLocation = (outputFile in conf).value.getAbsolutePath
-    val targetFolder = (outputFile in conf).value.getParentFile
+  def checkstyle(javaSource: File, resources: Seq[File], outputFile: File, configLocation: CheckstyleConfigLocation,
+                 xsltTransformations: Option[Set[CheckstyleXSLTSettings]], severityLevel: Option[CheckstyleSeverityLevel], streams: TaskStreams): Unit = {
+    val outputLocation = outputFile.absolutePath
+    val targetFolder = outputFile.getParentFile
     val configFile = targetFolder + "/checkstyle-config.xml"
 
     targetFolder.mkdirs()
 
-    val resolvedCheckstyleConfig = (configLocation in conf).value
-
-    val config = scala.xml.XML.loadString(resolvedCheckstyleConfig.read((resources in Compile).value))
+    val config = scala.xml.XML.loadString(configLocation.read(resources))
     scala.xml.XML.save(configFile, config, "UTF-8", xmlDecl = true,
       scala.xml.dtd.DocType("module", scala.xml.dtd.PublicID("-//Puppy Crawl//DTD Check Configuration 1.3//EN",
         "http://www.puppycrawl.com/dtds/configuration_1_3.dtd"), Nil))
 
     val checkstyleArgs = Array(
       "-c", configFile, // checkstyle configuration file
-      (javaSource in conf).value.getAbsolutePath, // location of Java source file
+      javaSource.absolutePath, // location of Java source file
       "-f", "xml", // output format
       "-o", outputLocation // output file
     )
@@ -58,14 +51,14 @@ object Checkstyle extends AutoPlugin {
       CheckstyleMain(checkstyleArgs: _*)
     }
 
-    xsltTransformations.value match {
+    xsltTransformations match {
       case None => // Nothing to do
       case Some(xslt) => applyXSLT(file(outputLocation), xslt)
     }
 
-    if (file(outputLocation).exists && severityLevel.value.isDefined) {
-      val log = streams.value.log
-      val issuesFound = processIssues(log, outputLocation, severityLevel.value.get)
+    if (file(outputLocation).exists && severityLevel.isDefined) {
+      val log = streams.log
+      val issuesFound = processIssues(log, outputLocation, severityLevel.get)
 
       if (issuesFound > 0) {
         log.error(issuesFound + " issue(s) found in Checkstyle report: " + outputLocation + "")
@@ -109,11 +102,11 @@ object Checkstyle extends AutoPlugin {
     * @param input The XML file produced by checkstyle
     * @param transformations The XSLT transformations to be applied
     */
-  private def applyXSLT(input: File, transformations: Set[XSLTSettings]): Unit = {
+  private def applyXSLT(input: File, transformations: Set[CheckstyleXSLTSettings]): Unit = {
     val processor = new Processor(false)
     val source = processor.newDocumentBuilder().build(input)
 
-    transformations foreach { transform: XSLTSettings =>
+    transformations foreach { transform: CheckstyleXSLTSettings =>
       val output = processor.newSerializer(transform.output)
       val compiler = processor.newXsltCompiler()
       val executor = compiler.compile(new StreamSource(transform.xslt))
@@ -146,15 +139,4 @@ object Checkstyle extends AutoPlugin {
       System.setSecurityManager(original)
     }
   }
-
-  override def projectSettings: Seq[Def.Setting[_]] = Seq(
-    outputFile <<= target(_ / "checkstyle-report.xml"),
-    outputFile in Test <<= target(_ / "checkstyle-test-report.xml"),
-    configLocation := CheckstyleConfig.File("checkstyle-config.xml"),
-    configLocation in Test <<= configLocation,
-    checkstyle in Compile <<= checkstyleTask(Compile),
-    checkstyle in Test <<= checkstyleTask(Test),
-    xsltTransformations := None,
-    severityLevel := None
-  )
 }

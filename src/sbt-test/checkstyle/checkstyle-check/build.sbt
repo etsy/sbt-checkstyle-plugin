@@ -4,7 +4,5 @@ name := "checkstyle-check"
 
 organization := "com.etsy"
 
-import com.etsy.sbt.checkstyle._
-
-Checkstyle.configLocation := CheckstyleConfig.File("my-checkstyle-config.xml")
-Checkstyle.severityLevel := Some(CheckstyleSeverityLevel.Error)
+checkstyleConfigLocation := CheckstyleConfigLocation.File("my-checkstyle-config.xml")
+checkstyleSeverityLevel := Some(CheckstyleSeverityLevel.Error)
