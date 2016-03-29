@@ -100,12 +100,12 @@ You can then run the tasks `it:checkstyle` and `it:checkstyle-check`.
 
 ### Upgrading Checkstyle version
 
-SBT Checkstyle plugin comes with a default Checkstyle version: currently, Checkstyle 6.13 is used by default.
+SBT Checkstyle plugin comes with a default Checkstyle version: currently, Checkstyle 6.15 is used by default.
 
 Provided the new Checkstyle version is compatible, you can override the version used at runtime in your `project/plugins.sbt`:
 
 ```scala
-dependencyOverrides += "com.puppycrawl.tools" % "checkstyle" % "6.13"
+dependencyOverrides += "com.puppycrawl.tools" % "checkstyle" % "6.15"
 ```
 
 ## Settings
