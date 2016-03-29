@@ -14,7 +14,7 @@ This is a fork of the sbt-code-quality project found
 Add the following lines to `project/plugins.sbt`:
 
 ```scala
-addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "2.1.0")
+addSbtPlugin("com.etsy" % "sbt-checkstyle-plugin" % "3.0.0")
 ```
 
 sbt-checkstyle-plugin is an AutoPlugin, so there is no need to modify the `build.sbt` file to enable it.
