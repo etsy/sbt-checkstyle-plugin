@@ -1,12 +1,10 @@
-sbtPlugin := true
-
 name := "sbt-checkstyle-plugin"
-
 organization := "com.etsy"
 
 version := "3.0.1-SNAPSHOT"
 
-scalaVersion := "2.10.4"
+sbtPlugin := true
+crossSbtVersions := Seq("0.13.16", "1.0.1")
 
 libraryDependencies ++= Seq(
   "com.puppycrawl.tools" % "checkstyle" % "6.15",
