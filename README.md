@@ -55,12 +55,12 @@ checkstyleConfigLocation := CheckstyleConfigLocation.Classpath("com/etsy/checkst
 
 To run Checkstyle automatically after compilation:
 ```scala
-(checkstyle in Compile) <<= (checkstyle in Compile) triggeredBy (compile in Compile)
+(checkstyle in Compile) := (checkstyle in Compile).triggeredBy(compile in Compile).value
 ```
 
 To run Checkstyle automatically after test compilation:
 ```scala
-(checkstyle in Test) <<= (checkstyle in Test) triggeredBy (compile in Test)
+(checkstyle in Test) := (checkstyle in Test).triggeredBy(compile in Test).value
 ```
 
 ### XSLT transformations
@@ -92,8 +92,8 @@ lazy val root = (project in file(".")).configs(IntegrationTest)
 Defaults.itSettings
 
 checkstyleConfigLocation := CheckstyleConfigLocation.File("my-checkstyle-config.xml"),
-checkstyle in IntegrationTest <<= checkstyleTask(IntegrationTest),
-checkstyleOutputFile in IntegrationTest <<= target(_ / "checkstyle-integration-test-report.xml")
+checkstyle in IntegrationTest := checkstyleTask(IntegrationTest).value,
+checkstyleOutputFile in IntegrationTest := target.value / "checkstyle-integration-test-report.xml"
 ```
 
 You can then run the tasks `it:checkstyle` and `it:checkstyle-check`.
