@@ -4,7 +4,7 @@ organization := "com.etsy"
 version := "3.0.1-SNAPSHOT"
 
 sbtPlugin := true
-crossSbtVersions := Seq("0.13.16", "1.0.1")
+crossSbtVersions := Seq("0.13.16", "1.1.0")
 
 libraryDependencies ++= Seq(
   "com.puppycrawl.tools"      %  "checkstyle"   % "6.15",
