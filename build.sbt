@@ -7,11 +7,11 @@ sbtPlugin := true
 crossSbtVersions := Seq("0.13.16", "1.0.1")
 
 libraryDependencies ++= Seq(
-  "com.puppycrawl.tools" % "checkstyle" % "6.15",
-  "net.sf.saxon" % "Saxon-HE" % "9.6.0-5",
-  "org.scalatest" % "scalatest_2.10" % "2.2.1" % "test",
-  "junit" % "junit" % "4.11" % "test",
-  "com.github.stefanbirkner" % "system-rules" % "1.6.0" % "test"
+  "com.puppycrawl.tools"      %  "checkstyle"   % "6.15",
+  "net.sf.saxon"              %  "Saxon-HE"     % "9.6.0-5",
+  "org.scalatest"             %% "scalatest"    % "3.0.4"   % "test",
+  "junit"                     %  "junit"        % "4.11"    % "test",
+  "com.github.stefanbirkner"  %  "system-rules" % "1.6.0"   % "test"
 )
 
 xerial.sbt.Sonatype.sonatypeSettings
