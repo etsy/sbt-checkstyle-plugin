@@ -47,11 +47,11 @@ object CheckstylePlugin extends AutoPlugin {
   )
 
   override lazy val projectSettings: Seq[Def.Setting[_]] = Seq(
-    checkstyleOutputFile <<= target(_ / "checkstyle-report.xml"),
-    checkstyleOutputFile in Test <<= target(_ / "checkstyle-test-report.xml"),
+    checkstyleOutputFile := target.value / "checkstyle-report.xml",
+    checkstyleOutputFile in Test := target.value / "checkstyle-test-report.xml",
     checkstyleConfigLocation := com.etsy.sbt.checkstyle.CheckstyleConfigLocation.File("checkstyle-config.xml"),
-    checkstyleConfigLocation in Test <<= checkstyleConfigLocation,
-    checkstyle <<= checkstyleTask(Compile),
-    checkstyle in Test <<= checkstyleTask(Test)
+    checkstyleConfigLocation in Test := checkstyleConfigLocation.value,
+    checkstyle := checkstyleTask(Compile).value,
+    checkstyle in Test := checkstyleTask(Test).value
   ) ++ commonSettings
 }
