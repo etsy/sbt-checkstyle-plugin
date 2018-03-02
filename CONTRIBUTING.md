@@ -17,3 +17,4 @@ Every pull request will be built with [Travis CI](https://travis-ci.org/etsy/sbt
 - sentolacco [sentolacco](https://github.com/sentolacco)
 - Joseph Earl [JosephEarl](https://github.com/JosephEarl)
 - Alejandro Rivera [AlejandroRivera](https://github.com/AlejandroRivera)
+- Michael Stringer [stringbean](https://github.com/stringbean)
