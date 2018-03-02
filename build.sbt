@@ -1,7 +1,7 @@
 name := "sbt-checkstyle-plugin"
 organization := "com.etsy"
 
-version := "3.0.1-SNAPSHOT"
+version := "3.1.2-SNAPSHOT"
 
 sbtPlugin := true
 crossSbtVersions := Seq("0.13.16", "1.1.0")
@@ -15,6 +15,7 @@ libraryDependencies ++= Seq(
 )
 
 xerial.sbt.Sonatype.sonatypeSettings
+publishTo := sonatypePublishTo.value
 
 pomExtra := <url>https://github.com/etsy/sbt-checkstyle-plugin</url>
   <licenses>
